@@ -1,0 +1,309 @@
+/*!
+ * #YoSoyScout Design System v1.0
+ * Uso: <link rel="stylesheet" href="design-system.css">
+ * Recomendación: colócalo ANTES de tu CSS específico para poder sobrescribir.
+ */
+
+/* =========================
+   FUENTES (Google Fonts)
+   ========================= */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Montserrat:wght@300;400;600;800&family=Roboto:wght@300;400;700&family=Anton&family=Permanent+Marker&family=Patrick+Hand&display=swap');
+
+/* =========================
+   TOKENS (variables)
+   ========================= */
+:root {
+  /* Identidad */
+  --scout-yellow: #FFD700;
+  --scout-black:  #111111;
+  --scout-white:  #FFFFFF;
+
+  /* Neutros */
+  --grey-50:  #fafafa;
+  --grey-100: #f5f5f5;
+  --grey-200: #eeeeee;
+  --grey-300: #dcdcdc;
+  --grey-500: #9e9e9e;
+  --grey-600: #666666;
+  --grey-800: #2b2b2b;
+
+  /* Acentos funcionales */
+  --success: #2ecc71;
+  --warning: #f39c12;
+  --danger:  #e74c3c;
+  --info:    #3498db;
+
+  /* Tipografía */
+  --font-title: 'Oswald', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-title-alt: 'Anton', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-subtitle: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-body: 'Roboto', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-hand: 'Permanent Marker', 'Patrick Hand', cursive;
+
+  /* Escala fluida */
+  --fs-0: clamp(0.85rem, 0.35vw + 0.8rem, 0.95rem);  /* small */
+  --fs-1: clamp(1.00rem, 0.50vw + 0.9rem, 1.15rem);  /* body */
+  --fs-2: clamp(1.15rem, 0.70vw + 1.0rem, 1.35rem);  /* lead */
+  --fs-3: clamp(1.45rem, 1.20vw + 1.1rem, 1.90rem);  /* h3 */
+  --fs-4: clamp(1.80rem, 2.20vw + 1.2rem, 2.60rem);  /* h2 */
+  --fs-5: clamp(2.40rem, 4.50vw + 1.2rem, 4.00rem);  /* h1 */
+
+  /* Espaciado */
+  --space-1:  6px;
+  --space-2:  10px;
+  --space-3:  14px;
+  --space-4:  18px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  44px;
+  --space-8:  60px;
+
+  /* Bordes y sombras */
+  --radius-1: 6px;
+  --radius-2: 10px;
+  --radius-3: 16px;
+
+  --shadow-1: 0 6px 16px rgba(0,0,0,.12);
+  --shadow-2: 0 12px 30px rgba(0,0,0,.18);
+  --shadow-3: 0 20px 60px rgba(0,0,0,.22);
+
+  /* Layout */
+  --max-content: 1200px;
+}
+
+/* =========================
+   BASE / RESET SUAVE
+   ========================= */
+* { box-sizing: border-box; }
+
+html {
+  font-size: clamp(14px, 1.1vw, 18px);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-1);
+  line-height: 1.6;
+  color: var(--scout-black);
+  background: var(--scout-white);
+}
+
+/* Accesibilidad básica */
+:focus-visible {
+  outline: 3px solid rgba(255, 215, 0, .55);
+  outline-offset: 3px;
+}
+
+img, svg, video { max-width: 100%; height: auto; }
+
+/* =========================
+   TIPOGRAFÍA
+   ========================= */
+h1, h2, h3 {
+  margin: 0 0 var(--space-3);
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--scout-black);
+}
+
+h1 { font-family: var(--font-title); font-size: var(--fs-5); }
+h2 { font-family: var(--font-title); font-size: var(--fs-4); color: rgba(0,0,0,.78); }
+h3 { font-family: var(--font-subtitle); font-size: var(--fs-3); letter-spacing: 0.3px; text-transform: none; }
+
+p { margin: 0 0 var(--space-4); max-width: 72ch; }
+
+small, .text-small { font-size: var(--fs-0); color: var(--grey-600); }
+
+.lead { font-size: var(--fs-2); }
+
+.kicker {
+  font-family: var(--font-subtitle);
+  font-size: var(--fs-0);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--grey-600);
+}
+
+/* =========================
+   LAYOUT HELPERS
+   ========================= */
+.ds-shell {
+  max-width: var(--max-content);
+  margin: 0 auto;
+  padding: clamp(var(--space-5), 4vw, var(--space-8));
+}
+
+.ds-stage {
+  min-height: 100dvh;   /* mejor que 100vh en móvil */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ds-panel {
+  width: min(96vw, var(--max-content));
+  border-radius: var(--radius-3);
+  box-shadow: var(--shadow-3);
+  overflow: hidden;
+  background: var(--scout-white);
+}
+
+/* =========================
+   COMPONENTES
+   ========================= */
+
+/* Header institucional */
+.ds-header {
+  background: var(--scout-black);
+  color: var(--scout-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) clamp(var(--space-5), 3vw, var(--space-7));
+  border-bottom: 5px solid var(--scout-yellow);
+}
+
+.ds-brand {
+  font-family: var(--font-title-alt);
+  letter-spacing: 1.5px;
+  font-size: clamp(1.1rem, 1.4vw, 1.5rem);
+}
+
+.ds-status {
+  font-family: var(--font-subtitle);
+  font-size: clamp(0.9rem, 1.0vw, 1.1rem);
+  opacity: 0.9;
+}
+
+/* Cards */
+.ds-card {
+  background: var(--grey-100);
+  border-left: 6px solid var(--scout-black);
+  border-radius: var(--radius-2);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-1);
+}
+
+.ds-card--yellow { background: rgba(255,215,0,.18); }
+.ds-card--dark   { background: var(--scout-black); color: var(--scout-white); border-left-color: var(--scout-yellow); }
+.ds-card--clean  { background: var(--scout-white); border: 1px solid var(--grey-300); border-left-width: 6px; }
+
+/* Highlight */
+.ds-highlight {
+  background: var(--scout-yellow);
+  color: var(--scout-black);
+  padding: 0 .35em;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+/* Post-it */
+.ds-postit {
+  font-family: var(--font-hand);
+  font-size: clamp(1.0rem, 1.0vw + 0.9rem, 1.2rem);
+  color: rgba(0,0,0,.85);
+  padding: var(--space-4);
+  border-radius: var(--radius-1);
+  box-shadow: 2px 2px 10px rgba(0,0,0,.18);
+  transform: rotate(-1.5deg);
+}
+
+.ds-postit:nth-child(even) { transform: rotate(1.2deg); }
+
+.ds-postit--yellow { background: #fff740; }
+.ds-postit--pink   { background: #ff7eb9; }
+.ds-postit--blue   { background: #7afcff; }
+.ds-postit--green  { background: #90ee90; }
+
+/* Button */
+.ds-btn {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 26px;
+  background: var(--scout-black);
+  color: var(--scout-yellow);
+  font-family: var(--font-subtitle);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: var(--shadow-1);
+  transition: transform .15s ease, filter .15s ease, opacity .15s ease;
+}
+
+.ds-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.ds-btn:active { transform: translateY(0); filter: brightness(0.98); }
+.ds-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Button variants */
+.ds-btn--yellow { background: var(--scout-yellow); color: var(--scout-black); }
+.ds-btn--ghost  { background: transparent; border: 2px solid var(--scout-black); color: var(--scout-black); }
+
+/* Pills / Tags */
+.ds-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-family: var(--font-subtitle);
+  font-weight: 700;
+  font-size: var(--fs-0);
+  background: var(--grey-200);
+  color: var(--scout-black);
+}
+
+.ds-pill--info    { background: rgba(52,152,219,.18); }
+.ds-pill--success { background: rgba(46,204,113,.18); }
+.ds-pill--warning { background: rgba(243,156,18,.18); }
+.ds-pill--danger  { background: rgba(231,76,60,.18); }
+
+/* Grid responsive */
+.ds-grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.ds-grid--auto {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* Slide transitions (sobrias) */
+.ds-slide {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .45s ease, transform .45s ease;
+  pointer-events: none;
+}
+
+.ds-slide.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+/* =========================
+   UTILIDADES
+   ========================= */
+.ds-center { text-align: center; }
+.ds-muted  { color: var(--grey-600); }
+.ds-divider { height: 1px; background: var(--grey-300); margin: var(--space-5) 0; }
+.ds-stack > * + * { margin-top: var(--space-4); }
+
+/* =========================
+   BREAKPOINTS (ajustes finos)
+   ========================= */
+@media (max-width: 768px) {
+  .ds-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  p { max-width: 100%; }
+}

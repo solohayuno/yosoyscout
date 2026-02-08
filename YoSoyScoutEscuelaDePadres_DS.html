@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escuela de Padres - Grupo 99</title>
+    <link rel="stylesheet" href="design-system.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Patrick+Hand&display=swap');
+
+        :root {
+            --primary: #FFD700; /* Amarillo Scout */
+            --dark: #1a1a1a;
+            --light: #f4f4f4;
+            --accent: #2c3e50;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: 80px 1fr 80px;
+        }
+
+        /* HEADER */
+        header {
+            background: var(--dark);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        /* AREA DE SLIDES */
+        .content-stage {
+            position: relative;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        /* TIPOGRAFÍA */
+        h1 { font-size: 3.5rem; color: var(--dark); margin-bottom: 20px; line-height: 1.1; }
+        h2 { font-size: 1.8rem; color: #666; font-weight: 300; margin-bottom: 40px; }
+        p { font-size: 1.2rem; line-height: 1.6; max-width: 800px; color: #444; }
+
+        .handwritten {
+            font-family: 'Patrick Hand', cursive;
+            color: var(--accent);
+            font-size: 1.5rem;
+            transform: rotate(-2deg);
+            display: inline-block;
+            background: var(--primary);
+            padding: 5px 15px;
+            margin-bottom: 20px;
+        }
+
+        /* EFECTO FLIP CARD (EL TRADUCTOR) */
+        .cards-container {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 15px;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .flip-card-front {
+            background-color: var(--primary);
+            color: var(--dark);
+        }
+
+        .flip-card-back {
+            background-color: var(--dark);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .icon-large { font-size: 5rem; margin-bottom: 20px; }
+        .card-title { font-weight: 900; font-size: 1.5rem; text-transform: uppercase; }
+        .card-desc { font-size: 1.1rem; margin-top: 15px; line-height: 1.4; }
+
+        /* FOOTER CONTROLS */
+        footer {
+            background: #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 5px;
+            background: #ccc;
+            margin: 0 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--dark);
+            width: 0%;
+            transition: width 0.3s;
+        }
+/* LISTA DE BENEFICIOS */
+        .benefit-list {
+            text-align: left;
+            font-size: 1.3rem;
+            line-height: 2;
+        }
+        .benefit-item span { color: var(--dark); font-weight: bold; margin-right: 10px; }
+
+    
+        /* ===== Design System integration (overrides mínimos) ===== */
+        body { background: var(--grey-100); }
+
+        .main-container {
+            width: min(96vw, 1200px);
+            height: min(92dvh, 900px);
+            border-radius: var(--radius-3);
+        }
+
+        header.ds-header {
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        /* Deja que DS controle botones; solo pequeños ajustes de layout */
+        footer { background: var(--grey-200); }
+
+        .progress-bar { background: var(--grey-300); }
+        .progress-fill { background: var(--scout-black); }
+
+        /* Flip-card: soportar tap en móvil */
+        .flip-card:hover .flip-card-inner,
+        .flip-card.active .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Responsive: tarjetas apiladas */
+        @media (max-width: 900px) {
+            .cards-container { flex-wrap: wrap; justify-content: center; }
+            .flip-card { width: min(90vw, 320px); height: 380px; }
+        }
+        @media (max-width: 600px) {
+            .main-container { height: 100dvh; border-radius: 0; }
+            footer { padding: 0 16px; }
+        }
+
+    </style>
+</head>
+<body class="ds-stage" style="background: var(--grey-100);">
+
+    <div class="main-container ds-panel">
+        <header class="ds-header">
+            <div class="ds-brand">ESCUELA DE PADRES 99</div>
+            <div class="ds-status">#YoSoyScout</div>
+        </header>
+
+        <div class="content-stage">
+            
+            <div class="slide active">
+                <div class="handwritten">¿Qué hacemos aquí?</div>
+                <h1>NO SOMOS UNA GUARDERÍA.<br>SOMOS TUS SOCIOS.</h1>
+                <h2>Bienvenidos a la verdad detrás del uniforme.</h2>
+                <p>Muchos traen a sus hijos para que "se despeguen de la pantalla" o "quemen energía".<br>Y está bien. Pero si solo ves eso, te estás perdiendo el 90% de la inversión.</p>
+            </div>
+
+            <div class="slide">
+                <h1>EL MITO DEL "PARQUE"</h1>
+                <p>A veces, mientras ustedes revisan el celular esperando la hora de salida, frente a sus ojos está ocurriendo una <b>transformación neuro-educativa</b>.</p>
+                <p>Permítannos usar el <b>"Traductor Scout"</b> para mostrarles lo que realmente pasa.</p>
+                <div style="margin-top: 30px; font-size: 0.9rem; color: #888;">(Pase el mouse sobre las tarjetas)</div>
+            </div>
+
+            <div class="slide">
+                <div class="cards-container">
+                    
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <div class="icon-large">⛺</div>
+                                <div class="card-title">TU VES:</div>
+                                <div class="card-desc">"Niños armando una tienda y durmiendo en el suelo."</div>
+                            </div>
+                            <div class="flip-card-back">
+                                <div class="icon-large">🧠</div>
+                                <div class="card-title">REALIDAD:</div>
+                                <div class="card-desc">Gerencia de Proyectos, Resiliencia y Adaptabilidad ante la incomodidad.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <div class="icon-large">🥘</div>
+                                <div class="card-title">TU VES:</div>
+                                <div class="card-desc">"Niños cocinando algo quemado y sucio."</div>
+                            </div>
+                            <div class="flip-card-back">
+                                <div class="icon-large">🤝</div>
+                                <div class="card-title">REALIDAD:</div>
+                                <div class="card-desc">Autonomía Alimentaria, Trabajo en Equipo y Presupuesto.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <div class="icon-large">⚜️</div>
+                                <div class="card-title">TU VES:</div>
+                                <div class="card-desc">"Niños parados en fila saludando."</div>
+                            </div>
+                            <div class="flip-card-back">
+                                <div class="icon-large">⚖️</div>
+                                <div class="card-title">REALIDAD:</div>
+                                <div class="card-desc">Respeto a la Institucionalidad, Civismo y Pertenencia.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="slide">
+                <h1>EL MEJOR ALIADO DE TU HIJO<br>ERES TÚ (CON AYUDA).</h1>
+                <p>El Método Scout está diseñado para decirles <b>lo mismo que tú les dices en casa</b>, pero a través del juego y la presión positiva de sus amigos.</p>
+                <div class="benefit-list">
+                    <div class="benefit-item"><span>✅</span> Cuando tú les dices "ordena", es una orden.</div>
+                    <div class="benefit-item"><span>✅</span> Cuando el Guía de Patrulla dice "ordenemos", es <b>Liderazgo</b>.</div>
+                </div>
+                <br>
+                <p>Nosotros reforzamos tus valores. Somos tu extensión en el campo.</p>
+            </div>
+
+            <div class="slide">
+                <div class="handwritten">Tarea para la casa</div>
+                <h1>CAMBIA LA PREGUNTA</h1>
+                <h2>No seas un "Padre Uber" (que solo transporta).</h2>
+                <p>Cuando recojas a tu hijo hoy, no le preguntes: <i>"¿Cómo te fue?"</i> (Te dirá: "Bien").</p>
+                <p>Pregúntale:</p>
+                <h3 style="background: var(--primary); padding: 10px 20px; display: inline-block;">"¿Qué problema resolviste hoy con tu equipo?"</h3>
+                <p>Ahí empezará la verdadera conversación.</p>
+            </div>
+
+             <div class="slide">
+                <h1>BIENVENIDOS AL EQUIPO.</h1>
+                <div class="icon-large">🤝</div>
+                <p>El Grupo 99 no es un lugar para "dejarlos".<br>Es un lugar para <b>crecer con ellos</b>.</p>
+                <p>Gracias por confiarnos su tesoro más grande.</p>
+                <h2 style="color: var(--dark); font-weight: 900;">#YoSoyScout (Y mi familia también)</h2>
+            </div>
+
+        </div>
+
+        <footer>
+            <button class="ds-btn ds-btn--ghost" id="prevBtn" class="ds-btn ds-btn--ghost" onclick="move(-1)">Anterior</button>
+            <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+            <button class="ds-btn ds-btn--yellow" id="nextBtn" onclick="move(1)">Siguiente</button>
+        </footer>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progress = document.getElementById('progress');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function update() {
+            slides.forEach((s, i) => {
+                s.classList.remove('active');
+                if (i === currentSlide) s.classList.add('active');
+            });
+
+            // Progress Bar
+            const percentage = ((currentSlide) / (slides.length - 1)) * 100;
+            progress.style.width = percentage + '%';
+
+            // Buttons
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.innerText = currentSlide === slides.length - 1 ? 'Finalizar' : 'Siguiente';
+        }
+
+        function move(dir) {
+            currentSlide += dir;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            update();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') move(1);
+            if (e.key === 'ArrowLeft') move(-1);
+        });
+
+        update();
+    </script>
+
+<script>
+  // Tap-to-flip para móviles (mantiene hover en desktop)
+  document.querySelectorAll('.flip-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('active');
+    });
+  });
+</script>
+
+</body>
+</html>

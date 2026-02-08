@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="design-system.css">
+<title>La Ruta #YoSoyScout: Progresión y Servicio (DS)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto+Condensed:wght@300;400;700&display=swap');
+
+        :root {
+            --bg-color: #2c3e50;
+            --path-color: #ecf0f1;
+            --manada-yellow: #f1c40f;
+            --tropa-green: #27ae60;
+            --caminantes-blue: #2980b9;
+            --clan-red: #c0392b;
+            --seal-gold: #ffd700;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Roboto Condensed', sans-serif;
+            color: var(--text-light);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .journey-container {
+            width: 95%;
+            max-width: 1200px;
+            height: 90vh;
+            background: linear-gradient(to bottom, #34495e, #2c3e50);
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* EL CAMINO DE FONDO (SVG ANIMADO) */
+        .path-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.2;
+        }
+
+        .path-line {
+            fill: none;
+            stroke: var(--path-color);
+            stroke-width: 4;
+            stroke-dasharray: 2000;
+            stroke-dashoffset: 2000;
+            animation: drawPath 3s forwards ease-in-out;
+        }
+
+        @keyframes drawPath { to { stroke-dashoffset: 0; } }
+
+        /* HEADER */
+        header {
+            padding: 20px;
+            text-align: center;
+            font-family: 'Architects Daughter', cursive;
+            font-size: 2rem;
+            color: var(--seal-gold);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        /* SECCIONES (ETAPAS) */
+        .stage-section {
+            flex: 1;
+            display: none; /* Ocultas por defecto */
+            padding: 40px;
+            position: relative;
+            z-index: 5;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .stage-section.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stage-title {
+            font-size: 3rem;
+            font-family: 'Architects Daughter', cursive;
+            margin-bottom: 10px;
+        }
+
+        .stage-focus {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+
+        .stage-content {
+            display: flex;
+            gap: 30px;
+            max-width: 900px;
+        }
+
+        .concept-card {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 10px;
+            flex: 1;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .card-icon { font-size: 3rem; margin-bottom: 15px; }
+        .card-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase; }
+        .card-text { font-size: 1.1rem; line-height: 1.6; }
+
+        /* COLORES POR RAMA */
+        .s-manada .stage-title { color: var(--manada-yellow); }
+        .s-manada .stage-focus { color: var(--manada-yellow); border-color: var(--manada-yellow); }
+        .s-tropa .stage-title { color: var(--tropa-green); }
+        .s-tropa .stage-focus { color: var(--tropa-green); border-color: var(--tropa-green); }
+        .s-caminantes .stage-title { color: var(--caminantes-blue); }
+        .s-caminantes .stage-focus { color: var(--caminantes-blue); border-color: var(--caminantes-blue); }
+        .s-clan .stage-title { color: var(--clan-red); }
+        .s-clan .stage-focus { color: var(--clan-red); border-color: var(--clan-red); }
+        .s-intro h1, .s-intro h2 { color: var(--seal-gold); }
+
+        /* CANVAS DEL ROVER (ESPECIAL) */
+        .rover-canvas {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 30px;
+        }
+
+        .canvas-block {
+            background: #ecf0f1;
+            color: var(--text-dark);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .canvas-block:hover { transform: translateY(-5px); }
+
+        .block-header {
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--clan-red);
+            border-bottom: 2px solid var(--clan-red);
+        }
+
+        .block-content { font-family: 'Architects Daughter', cursive; font-size: 1.1rem; }
+        
+        .block-ppa { background: #ffcccb; } /* PPA Personal */
+        .block-service { background: #d5dbdb; } /* Servicio Puro */
+        .block-seal { background: var(--seal-gold); color: var(--scout-black); border: 2px solid var(--scout-black); }
+
+        .arrow-connector {
+            position: absolute;
+            font-size: 2rem;
+            color: var(--text-light);
+            z-index: 1;
+        }
+
+        /* CONTROLES */
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 20;
+        }
+
+        button {
+            padding: 12px 30px;
+            background: var(--seal-gold);
+            color: var(--scout-black);
+            border: none;
+            border-radius: 30px;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+
+        button:hover { transform: scale(1.1); background: #ffed4a; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+<style>
+
+/* === DS PATCH (no rompe tu layout; unifica marca) === */
+:root{
+  /* Alinea variables existentes a DS cuando aplique */
+  --scout-yellow: var(--scout-yellow);
+  --scout-black:  var(--scout-black);
+  --scout-white:  var(--scout-white);
+}
+
+/* Tipografía y ritmo */
+body{
+  font-family: var(--font-body) !important;
+  color: var(--scout-black);
+}
+h1{ font-family: var(--font-title) !important; font-size: var(--fs-5); letter-spacing: .6px; }
+h2{ font-family: var(--font-title) !important; font-size: var(--fs-4); }
+h3{ font-family: var(--font-subtitle) !important; font-size: var(--fs-3); }
+p, li{ font-size: var(--fs-1); line-height: 1.6; }
+
+/* Evita cortes en móvil */
+.stage, .main-container, .presentation-container, .journey-container, .scarf-container, .editor-console, .media-console{
+  min-height: 100dvh;
+  height: auto;
+}
+body{ overflow-x: hidden; }
+@media (max-width: 768px){
+  body{ overflow-y: auto; }
+}
+
+/* Botones consistentes (sin cambiar tu HTML) */
+button{
+  font-family: var(--font-subtitle) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 999px !important;
+  box-shadow: var(--shadow-1) !important;
+}
+button:hover{ filter: brightness(1.05); }
+
+/* Cards y cajas: sombra y radio premium */
+.slide, .canvas-box, .concept-card, .copy-box, .card, .application-mockup, .seal-mockup{
+  border-radius: var(--radius-2) !important;
+}
+
+/* Headers: contraste y marca */
+header, .header{
+  font-family: var(--font-title-alt);
+}
+
+/* Accesibilidad: foco */
+:focus-visible{
+  outline: 3px solid rgba(255, 215, 0, .55);
+  outline-offset: 3px;
+}
+
+</style>
+</head>
+<body>
+
+    <div class="journey-container">
+        <svg class="path-svg" viewBox="0 0 1000 600" preserveAspectRatio="none">
+            <path class="path-line" d="M-50,550 C200,550 150,400 350,350 C550,300 500,150 800,100 C950,75 1050,50 1050,50" />
+        </svg>
+
+        <header>La Ruta #YoSoyScout: Progresión y Servicio Real</header>
+
+        <div class="stage-section s-intro active">
+            <h1 class="stage-title">EL CONCEPTO CLAVE</h1>
+            <h2 class="stage-focus">El Sello es la HUELLA, no la META.</h2>
+            <div class="stage-content" style="justify-content: center;">
+                <div class="concept-card" style="max-width: 600px; text-align: center;">
+                    <div class="card-icon">👣 ➔ 🏅</div>
+                    <div class="card-text">
+                        No les diremos: "Gánate el sello".<br>
+                        Les diremos: "Cuando haces un <b>Gran Servicio</b> por pasión, dejas una huella. Esa huella se llama #YoSoyScout."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stage-section s-manada">
+            <h1 class="stage-title">MANADA (7-11)</h1>
+            <h2 class="stage-focus">La Alegría de Dar</h2>
+            <div class="stage-content">
+                <div class="concept-card">
+                    <div class="card-icon">🐺</div>
+                    <div class="card-title">Dinámica</div>
+                    <div class="card-text">La Buena Acción Colectiva como un "Juego de Ciudad". Akela no habla de marketing, habla de llevar felicidad.</div>
+                </div>
+                <div class="concept-card">
+                    <div class="card-icon">🎁</div>
+                    <div class="card-title">El Resultado #YoSoyScout</div>
+                    <div class="card-text">Los lobatos regalan un dibujo al asilo. Ese gesto genuino es su sello. La institución ve la alegría y pregunta por el grupo.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stage-section s-tropa">
+            <h1 class="stage-title">TROPA (11-15)</h1>
+            <h2 class="stage-focus">La Aventura de Servir</h2>
+            <div class="stage-content">
+                <div class="concept-card">
+                    <div class="card-icon">⚜️</div>
+                    <div class="card-title">Dinámica</div>
+                    <div class="card-text">El "Desafío de Patrulla". La Corte de Honor reta: "¿Quién es capaz de mejorar su esquina?". Es una misión de exploración.</div>
+                </div>
+                <div class="concept-card">
+                    <div class="card-icon">🛠️</div>
+                    <div class="card-title">El Resultado #YoSoyScout</div>
+                    <div class="card-text">La Patrulla Águilas arregla los columpios del parque y pinta el logo scout. La comunidad ve que la aventura scout beneficia a todos.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stage-section s-caminantes">
+            <h1 class="stage-title">CAMINANTES (15-17)</h1>
+            <h2 class="stage-focus">El Desafío Comunitario</h2>
+            <div class="stage-content">
+                <div class="concept-card">
+                    <div class="card-icon">🚀</div>
+                    <div class="card-title">Dinámica</div>
+                    <div class="card-text">La "Empresa Caminante". El Congreso decide su proyecto anual (ej. Reforestación) con total protagonismo.</div>
+                </div>
+                <div class="concept-card">
+                    <div class="card-icon">🤝</div>
+                    <div class="card-title">El Resultado #YoSoyScout</div>
+                    <div class="card-text">Usan el portafolio #YoSoyScout como su carta de presentación para pedir apoyo serio al Ministerio o empresas.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stage-section s-clan">
+            <h1 class="stage-title">CLAN (18-21)</h1>
+            <h2 class="stage-focus">El Servicio como Estilo de Vida (BP)</h2>
+            
+            <div style="text-align: center; margin-bottom: 20px;">"El servicio es la actividad práctica del Escultismo para los Rovers."</div>
+
+            <div class="rover-canvas">
+                <div class="canvas-block block-ppa">
+                    <div class="block-header">1. MI PROYECTO PERSONAL (PPA)</div>
+                    <div class="block-content">
+                        Soy Rover y me apasiona la <b>Ingeniería Civil</b>. Quiero aplicar lo que sé.
+                    </div>
+                </div>
+                <div class="arrow-connector" style="top: 50%; left: 32%;">➔</div>
+
+                <div class="canvas-block block-service">
+                    <div class="block-header">2. MI SERVICIO NATURAL</div>
+                    <div class="block-content">
+                        Voy a diseñar un sistema de <b>recolección de agua</b> para la escuela del barrio.
+                    </div>
+                </div>
+                <div class="arrow-connector" style="top: 50%; left: 65%;">➔</div>
+
+                <div class="canvas-block block-seal">
+                    <div class="block-header">3. EL AVAL INSTITUCIONAL (#YoSoyScout)</div>
+                    <div class="block-content">
+                        El Grupo me respalda con el <b>Sello #YoSoyScout</b> para tocar la puerta de la Ferretería y conseguir los tubos.
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; font-size: 0.9rem; text-align: center;">
+                <i>Consecuencia: El Rover no trabaja para el sello. Trabaja para la comunidad. El Sello es su herramienta de gestión.</i>
+            </div>
+        </div>
+
+        <div class="stage-section s-intro">
+             <h1 class="stage-title">BLINDAJE DE VALORES</h1>
+            <h2 class="stage-focus">Compatibilidad con nuestros Principios.</h2>
+            <div class="stage-content" style="flex-direction: column; align-items: center;">
+                <p style="font-size: 1.2rem; text-align: center; max-width: 700px;">
+                    Para evitar que el servicio se confunda con activismo incompatible, todo proyecto con el aval <b>#YoSoyScout</b> pasa por 3 filtros:
+                </p>
+                <div style="display: flex; gap: 20px; width: 100%;">
+                    <div class="concept-card">
+                        <div class="card-title">1. Deberes para con Dios</div>
+                        <div class="card-text">Respeta la dimensión espiritual y la familia natural. No apoya agendas divisivas.</div>
+                    </div>
+                    <div class="concept-card">
+                        <div class="card-title">2. Deberes para con los Demás</div>
+                        <div class="card-text">El servicio une, no polariza. "El Scout es amigo de todos".</div>
+                    </div>
+                    <div class="concept-card">
+                        <div class="card-title">3. Deberes para consigo Mismo</div>
+                        <div class="card-text">Construye carácter, resiliencia y trabajo duro. No el camino fácil.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="controls">
+            <button id="prevBtn" onclick="changeSlide(-1)" disabled>Anterior</button>
+            <button id="nextBtn" onclick="changeSlide(1)">Siguiente Etapa ❯</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.stage-section');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateUI() {
+            slides.forEach(s => s.classList.remove('active'));
+            slides[currentSlide].classList.add('active');
+            
+            prevBtn.disabled = (currentSlide === 0);
+            nextBtn.innerText = (currentSlide === slides.length - 1) ? 'Finalizar Viaje' : 'Siguiente Etapa ❯';
+        }
+
+        function changeSlide(dir) {
+            currentSlide += dir;
+            if(currentSlide < 0) currentSlide = 0;
+            if(currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateUI();
+        }
+
+        // Teclado
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight') changeSlide(1);
+            if(e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="design-system.css">
+<title>Estrategia Contenidos - Claudia (DS)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@300;400;700&display=swap');
+
+        :root {
+            --scout-yellow: #FFD700;
+            --scout-black: #1a1a1a;
+            --paper-white: #f4f4f4;
+            --ink-blue: #2c3e50;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--scout-black);
+            font-family: 'Lato', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* CONSOLA PRINCIPAL */
+        .editor-console {
+            width: 95%;
+            max-width: 1100px;
+            height: 90vh;
+            background-color: var(--paper-white);
+            display: grid;
+            grid-template-columns: 1fr 300px; /* Invertido respecto a Walesca */
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR DERECHO (MENÚ) */
+        .sidebar {
+            background-color: var(--scout-yellow);
+            color: var(--scout-black);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-left: 10px solid var(--scout-black);
+            text-align: right;
+        }
+
+        .brand-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem;
+            line-height: 0.9;
+            margin-bottom: 20px;
+            color: var(--scout-black);
+        }
+
+        .role-tag {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid var(--scout-black);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        .nav-item {
+            font-size: 1.1rem;
+            margin: 15px 0;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .nav-item.active {
+            opacity: 1;
+            transform: translateX(-10px);
+        }
+
+        .nav-item:hover { opacity: 1; }
+
+        /* ÁREA DE CONTENIDO */
+        .content-area {
+            position: relative;
+            background: white;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 60px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.5s ease-in-out;
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all;
+        }
+
+        /* TIPOGRAFÍA */
+        h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4.5rem;
+            color: var(--scout-black);
+            margin: 0;
+            line-height: 0.9;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #555;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #333;
+            max-width: 650px;
+        }
+
+        .highlight {
+            background: var(--scout-yellow);
+            padding: 0 5px;
+            font-weight: bold;
+        }
+
+        /* COMPONENTES GRÁFICOS */
+        .copy-comparison {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .copy-box {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .copy-box.bad { background: #fee; border-color: #fcc; }
+        .copy-box.good { background: #eef; border-color: #ccf; border-left: 5px solid var(--scout-black); }
+
+        .copy-label { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; color: #777; }
+        .copy-text { font-family: 'Courier New', monospace; font-size: 1rem; }
+
+        .chat-bubble {
+            background: var(--scout-black);
+            color: white;
+            padding: 20px;
+            border-radius: 20px 20px 20px 0;
+            margin-bottom: 10px;
+            max-width: 500px;
+            font-size: 1.1rem;
+        }
+
+        /* CONTROLES */
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            left: 60px;
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            background: transparent;
+            border: 2px solid var(--scout-black);
+            padding: 10px 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Lato', sans-serif;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: var(--scout-black);
+            color: white;
+        }
+        
+        button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: #ccc;
+        }
+
+    </style>
+<style>
+
+/* === DS PATCH (no rompe tu layout; unifica marca) === */
+:root{
+  /* Alinea variables existentes a DS cuando aplique */
+  --scout-yellow: var(--scout-yellow);
+  --scout-black:  var(--scout-black);
+  --scout-white:  var(--scout-white);
+}
+
+/* Tipografía y ritmo */
+body{
+  font-family: var(--font-body) !important;
+  color: var(--scout-black);
+}
+h1{ font-family: var(--font-title) !important; font-size: var(--fs-5); letter-spacing: .6px; }
+h2{ font-family: var(--font-title) !important; font-size: var(--fs-4); }
+h3{ font-family: var(--font-subtitle) !important; font-size: var(--fs-3); }
+p, li{ font-size: var(--fs-1); line-height: 1.6; }
+
+/* Evita cortes en móvil */
+.stage, .main-container, .presentation-container, .journey-container, .scarf-container, .editor-console, .media-console{
+  min-height: 100dvh;
+  height: auto;
+}
+body{ overflow-x: hidden; }
+@media (max-width: 768px){
+  body{ overflow-y: auto; }
+}
+
+/* Botones consistentes (sin cambiar tu HTML) */
+button{
+  font-family: var(--font-subtitle) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 999px !important;
+  box-shadow: var(--shadow-1) !important;
+}
+button:hover{ filter: brightness(1.05); }
+
+/* Cards y cajas: sombra y radio premium */
+.slide, .canvas-box, .concept-card, .copy-box, .card, .application-mockup, .seal-mockup{
+  border-radius: var(--radius-2) !important;
+}
+
+/* Headers: contraste y marca */
+header, .header{
+  font-family: var(--font-title-alt);
+}
+
+/* Accesibilidad: foco */
+:focus-visible{
+  outline: 3px solid rgba(255, 215, 0, .55);
+  outline-offset: 3px;
+}
+
+</style>
+</head>
+<body>
+
+    <div class="editor-console">
+        
+        <div class="content-area">
+            
+            <div class="slide active">
+                <div style="color: #888; letter-spacing: 1px; font-weight: bold;">RR.CC. | ESTRATEGIA DIGITAL</div>
+                <h1>TU ERES LA <span class="highlight">VOZ</span><br>DEL MOVIMIENTO.</h1>
+                <h2>Directora de Contenidos & Comunidad.</h2>
+                <p>Si Walesca diseña cómo nos vemos, <b>tú diseñas cómo sonamos.</b></p>
+                <p>Tu misión no es publicar avisos. Tu misión es <b>gestionar la conversación</b> digital para que el "Sello #YoSoyScout" tenga peso y significado en redes sociales.</p>
+            </div>
+
+            <div class="slide">
+                <h1>EL PODER DE LAS<br>PALABRAS.</h1>
+                <h2>Transformando "Actividades" en "Causas".</h2>
+                <p>Las empresas no patrocinan "reuniones". Patrocinan impacto. Todo depende de cómo lo escribas.</p>
+                
+                <div class="copy-comparison">
+                    <div class="copy-box bad">
+                        <div class="copy-label">ANTES (ABURRIDO)</div>
+                        <div class="copy-text">"El sábado los scouts limpiamos el parque. Asistan."</div>
+                    </div>
+                    <div class="copy-box good">
+                        <div class="copy-label">AHORA (CLAUDIA STYLE)</div>
+                        <div class="copy-text">"Mientras otros duermen, el Grupo 99 recupera tu parque. 💪🌳 Únete a la brigada. #YoSoyScout #Acción"</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <h1>TU EJÉRCITO DE<br>REPORTEROS.</h1>
+                <h2>No puedes estar en todas partes.</h2>
+                <p>Como Estratega, no tienes que tomar todas las fotos. Tienes que <b>entrenar</b> a un muchacho en cada unidad (el "Intendente de Prensa") para que te envíe el material.</p>
+                <div class="chat-bubble">
+                    📢 <b>Tu rol:</b> Crear el grupo de WhatsApp "Prensa 99" y decirles: <i>"Chicos, hoy necesito un video de 15 segundos sobre Alegría. ¡El mejor sale en el Instagram oficial!"</i>
+                </div>
+                <p>Tú curas el contenido, ellos lo generan.</p>
+            </div>
+
+            <div class="slide">
+                <h1>LA FOGATA<br>DIGITAL.</h1>
+                <h2>Community Management Real.</h2>
+                <p>Las redes son nuestro nuevo "Fuego de Campamento".</p>
+                <ul style="font-size: 1.2rem; line-height: 1.8;">
+                    <li>🔥 <b>Responder:</b> Si una empresa o papá comenta, tú respondes con mística.</li>
+                    <li>🔥 <b>Etiquetar:</b> Asegurarte de que @EmpresaPionera y @Bomberos siempre estén etiquetados en las historias.</li>
+                    <li>🔥 <b>Hashtags:</b> Posicionar #YoSoyScout y #Grupo99BP en la zona.</li>
+                </ul>
+            </div>
+
+            <div class="slide">
+                <h1>PRÓXIMOS PASOS</h1>
+                <h2>Tu Plan de Acción Inmediato.</h2>
+                <ol style="font-size: 1.2rem; line-height: 1.8;">
+                    <li><b>Definir el Tono:</b> ¿Cómo habla el Grupo 99? (Alegre, Seguro, Servicial).</li>
+                    <li><b>Capacitar Corresponsales:</b> Una charla de 15 min con los Guías de Patrulla sobre "cómo grabar con el celular".</li>
+                    <li><b>Calendario Editorial:</b> Planificar qué se publica cada semana (Lunes de Motivación, Jueves de TBT, Sábado de Acción).</li>
+                    <li><b>Campaña de Expectativa:</b> Empezar a hablar del "Sello" en redes antes de lanzarlo.</li>
+                </ol>
+            </div>
+
+            <div class="controls">
+                <button id="prevBtn" onclick="changeSlide(-1)">Anterior</button>
+                <button id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="brand-logo">99<br>MEDIA</div>
+            <div class="role-tag">CLAUDIA</div>
+            
+            <div class="nav-item active" onclick="goToSlide(0)">IDENTIDAD</div>
+            <div class="nav-item" onclick="goToSlide(1)">NARRATIVA</div>
+            <div class="nav-item" onclick="goToSlide(2)">REPORTEROS</div>
+            <div class="nav-item" onclick="goToSlide(3)">COMUNIDAD</div>
+            <div class="nav-item" onclick="goToSlide(4)">ACCIÓN</div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const navItems = document.querySelectorAll('.nav-item');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateUI() {
+            // Slides
+            slides.forEach(s => s.classList.remove('active'));
+            slides[currentSlide].classList.add('active');
+            
+            // Nav
+            navItems.forEach(n => n.classList.remove('active'));
+            navItems[currentSlide].classList.add('active');
+
+            // Buttons
+            prevBtn.disabled = (currentSlide === 0);
+            nextBtn.innerText = (currentSlide === slides.length - 1) ? "FINALIZAR" : "SIGUIENTE";
+        }
+
+        function changeSlide(dir) {
+            currentSlide += dir;
+            if(currentSlide < 0) currentSlide = 0;
+            if(currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateUI();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateUI();
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight') changeSlide(1);
+            if(e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="design-system.css">
+<title>Estrategia Sello de Valores #YoSoyScout (DS)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --scout-yellow: #FFD700;
+            --scout-black: #1a1a1a;
+            --scout-white: #ffffff;
+            --corporate-grey: #f0f0f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--scout-black);
+            font-family: 'Roboto', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .presentation-container {
+            width: 90%;
+            max-width: 1000px;
+            height: 85vh;
+            background-color: var(--scout-white);
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--scout-yellow);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid var(--scout-black);
+        }
+
+        .brand {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--scout-black);
+            display: flex;
+            align-items: center;
+        }
+
+        .fleur-header { font-size: 1.8rem; margin-right: 10px; }
+
+        /* SLIDES */
+        .slide-content {
+            flex: 1;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 50px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.5s ease-in-out;
+            pointer-events: none; /* Evita clicks en slides ocultos */
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+
+        /* TIPOGRAFÍA */
+        h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3.5rem;
+            color: var(--scout-black);
+            text-transform: uppercase;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+        }
+
+        .highlight-box {
+            background: var(--scout-black);
+            color: var(--scout-yellow);
+            padding: 5px 15px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* VISUALES ESPECÍFICOS */
+        .seal-prototype-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .seal-mockup {
+            width: 250px;
+            height: 250px;
+            background: var(--corporate-grey);
+            border-radius: 50%; /* Forma circular del sello */
+            border: 10px solid var(--scout-yellow);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .seal-mockup::after {
+            content: '';
+            position: absolute;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border: 2px dashed var(--scout-black);
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        .seal-text-top { font-family: 'Oswald'; font-size: 0.9rem; margin-bottom: 5px; }
+        .seal-logo { font-size: 4rem; color: var(--scout-black); }
+        .seal-text-main { font-family: 'Oswald'; font-size: 1.2rem; font-weight: bold; margin: 5px 0; }
+        .seal-hashtag { font-family: 'Roboto'; font-weight: bold; color: var(--scout-black); background: var(--scout-yellow); padding: 2px 8px; }
+
+        .application-mockup {
+            width: 45%;
+            background: #eee;
+            height: 300px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #999;
+            border: 3px dashed #ccc;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mini-seal {
+            position: absolute;
+            width: 80px; height: 80px;
+            background: var(--scout-yellow);
+            border: 3px solid var(--scout-black);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 2rem; color: var(--scout-black);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+        }
+
+        /* CONTROLES */
+        .controls {
+            background: var(--corporate-grey);
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        button {
+            background: var(--scout-black);
+            color: var(--scout-yellow);
+            border: none;
+            padding: 12px 25px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        button:hover { background: #333; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    </style>
+<style>
+
+/* === DS PATCH (no rompe tu layout; unifica marca) === */
+:root{
+  /* Alinea variables existentes a DS cuando aplique */
+  --scout-yellow: var(--scout-yellow);
+  --scout-black:  var(--scout-black);
+  --scout-white:  var(--scout-white);
+}
+
+/* Tipografía y ritmo */
+body{
+  font-family: var(--font-body) !important;
+  color: var(--scout-black);
+}
+h1{ font-family: var(--font-title) !important; font-size: var(--fs-5); letter-spacing: .6px; }
+h2{ font-family: var(--font-title) !important; font-size: var(--fs-4); }
+h3{ font-family: var(--font-subtitle) !important; font-size: var(--fs-3); }
+p, li{ font-size: var(--fs-1); line-height: 1.6; }
+
+/* Evita cortes en móvil */
+.stage, .main-container, .presentation-container, .journey-container, .scarf-container, .editor-console, .media-console{
+  min-height: 100dvh;
+  height: auto;
+}
+body{ overflow-x: hidden; }
+@media (max-width: 768px){
+  body{ overflow-y: auto; }
+}
+
+/* Botones consistentes (sin cambiar tu HTML) */
+button{
+  font-family: var(--font-subtitle) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 999px !important;
+  box-shadow: var(--shadow-1) !important;
+}
+button:hover{ filter: brightness(1.05); }
+
+/* Cards y cajas: sombra y radio premium */
+.slide, .canvas-box, .concept-card, .copy-box, .card, .application-mockup, .seal-mockup{
+  border-radius: var(--radius-2) !important;
+}
+
+/* Headers: contraste y marca */
+header, .header{
+  font-family: var(--font-title-alt);
+}
+
+/* Accesibilidad: foco */
+:focus-visible{
+  outline: 3px solid rgba(255, 215, 0, .55);
+  outline-offset: 3px;
+}
+
+</style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <div class="header">
+            <div class="brand"><span class="fleur-header">⚜️</span> GRUPO 99 | ALIANZAS</div>
+            <div style="font-family: 'Oswald'; font-weight: bold;">Estrategia #YoSoyScout</div>
+        </div>
+
+        <div class="slide-content">
+            
+            <div class="slide active">
+                <h1>NO ES UNA CALCOMANÍA,<br>ES UN VALIDADOR MORAL.</h1>
+                <h2>La Visión Estratégica del Sello.</h2>
+                <p>El Sello #YoSoyScout no es publicidad. Es un distintivo de **honor** para empresas e instituciones que comparten nuestros valores de servicio, integridad y trabajo duro.</p>
+                <br>
+                <p>Buscamos que al verlo, la comunidad diga: <br><span class="highlight-box">"Aquí se apoya a la juventud que construye país."</span></p>
+            </div>
+
+            <div class="slide">
+                <h1>EL PROTOTIPO VISUAL</h1>
+                <h2>Concepto del Sello Físico.</h2>
+                <p>Debe ser premium, duradero y transmitir seriedad institucional. No un sticker de papel.</p>
+                
+                <div class="seal-prototype-container">
+                    <div class="seal-mockup">
+                        <div class="seal-text-top">ALIANZA DE VALORES</div>
+                        <div class="seal-logo">⚜️</div>
+                        <div class="seal-text-main">EMPRESA AMIGA</div>
+                        <div class="seal-hashtag">#YoSoyScout</div>
+                    </div>
+                    
+                    <div style="max-width: 400px;">
+                        <h3>Características Clave:</h3>
+                        <ul>
+                            <li><b>Forma Circular:</b> Señal de unidad y compromiso continuo.</li>
+                            <li><b>Colores:</b> Amarillo (Luz/Energía) y Negro (Fuerza/Seriedad).</li>
+                            <li><b>Material (Ideal):</b> Acrílico, metal o vinil de alta resistencia.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <h1>APLICACIÓN EN EL MUNDO REAL</h1>
+                <h2>1. En la Puerta de Nuestros Aliados.</h2>
+                <p>El objetivo es que la empresa pionera (José Aníbal & Rosa) lo coloque con orgullo en su entrada principal o recepción.</p>
+
+                <div class="seal-prototype-container">
+                    <div class="application-mockup" style="background-image: url('https://img.freepik.com/free-photo/modern-office-entrance-with-glass-door_1170-1812.jpg?w=740'); background-size: cover;">
+                        <div class="mini-seal" style="bottom: 20px; right: 20px;">⚜️</div>
+                        </div>
+                    <p style="width: 45%; font-size: 1.1rem;"><b>El Efecto:</b> Convierte la entrada del negocio en una declaración de principios. Atrae a clientes que valoran la responsabilidad social.</p>
+                </div>
+            </div>
+
+            <div class="slide">
+                <h1>APLICACIÓN EN EL MUNDO REAL</h1>
+                <h2>2. En el Perímetro de Nuestro Local.</h2>
+                <p>Crearemos el **"Muro de los Aliados"** en el local del Grupo 99.</p>
+
+                <div class="seal-prototype-container">
+                    <div class="application-mockup" style="background-image: url('https://img.freepik.com/free-photo/weathered-brick-wall-background_23-2149270583.jpg?w=740'); background-size: cover;">
+                        <div class="mini-seal" style="top: 30px; left: 30px;">⚜️</div>
+                        <div class="mini-seal" style="top: 30px; left: 120px; opacity: 0.5;">?</div>
+                        <div class="mini-seal" style="top: 30px; left: 210px; opacity: 0.5;">?</div>
+                    </div>
+                    <p style="width: 45%; font-size: 1.1rem;"><b>El Efecto:</b> Los beneficiarios y padres ven quiénes nos respaldan. Es una muestra física del apoyo comunitario que hemos logrado.</p>
+                </div>
+            </div>
+
+            <div class="slide">
+                <h1>PRÓXIMOS PASOS</h1>
+                <h2>De la Idea a la Acción.</h2>
+                <ul>
+                    <li><b>✅ Validación:</b> ¿Están de acuerdo con este concepto visual y estratégico? (Feedback de Rosa, José A., Claudia, Walesca).</li>
+                    <li><b>🎨 Diseño Final:</b> RR.CC. (Claudia/Walesca) digitalizan el arte final del sello.</li>
+                    <li><b>🏭 Cotización:</b> Buscar proveedor para producir el primer lote (calidad premium).</li>
+                    <li><b>🚀 Lanzamiento:</b> Acto oficial de entrega del Sello #001 a la empresa pionera.</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" onclick="changeSlide(-1)" disabled>Anterior</button>
+            <button id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            
+            prevBtn.disabled = (index === 0);
+            nextBtn.innerText = (index === slides.length - 1) ? 'Finalizar' : 'Siguiente';
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            showSlide(currentSlide);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        // Iniciar
+        showSlide(0);
+    </script>
+</body>
+</html>

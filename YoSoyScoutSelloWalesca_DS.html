@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="design-system.css">
+<title>Estrategia RR.CC. - Walesca & Claudia (DS)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;600;800&display=swap');
+
+        :root {
+            --scout-yellow: #FFD700;
+            --scout-black: #111;
+            --agency-white: #f9f9f9;
+            --highlight-grey: #e0e0e0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--scout-black);
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* CONSOLA PRINCIPAL */
+        .media-console {
+            width: 95%;
+            max-width: 1100px;
+            height: 90vh;
+            background-color: var(--agency-white);
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.1);
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        /* SIDEBAR (MENÚ) */
+        .sidebar {
+            background-color: var(--scout-black);
+            color: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 5px solid var(--scout-yellow);
+        }
+
+        .brand-logo {
+            font-family: 'Anton', sans-serif;
+            font-size: 2.5rem;
+            color: var(--scout-yellow);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .role-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            border-bottom: 1px solid #555;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .nav-dots {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .dot {
+            height: 12px;
+            width: 12px;
+            background-color: #333;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background-color: var(--scout-yellow);
+            transform: scale(1.3);
+            box-shadow: 0 0 10px var(--scout-yellow);
+        }
+
+        .meta-info {
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        /* ÁREA DE CONTENIDO */
+        .content-area {
+            position: relative;
+            overflow: hidden;
+            background: white;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 60px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        /* ESTILOS DE TEXTO */
+        h1 {
+            font-family: 'Anton', sans-serif;
+            font-size: 4rem;
+            color: var(--scout-black);
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 0.9;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            max-width: 700px;
+        }
+
+        /* CAJAS DE ESTRATEGIA */
+        .strategy-box {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: var(--highlight-grey);
+            padding: 25px;
+            flex: 1;
+            border-left: 5px solid var(--scout-black);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            background: var(--scout-yellow);
+            color: var(--scout-black);
+            transform: translateY(-5px);
+            border-left: 5px solid white;
+        }
+
+        .card h3 { margin-top: 0; font-family: 'Anton'; }
+
+        /* VISUAL DEL SELLO */
+        .visual-identity {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .mockup-post {
+            width: 200px;
+            height: 300px;
+            background: #eee;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #aaa;
+            position: relative;
+        }
+
+        .badge-overlay {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--scout-yellow);
+            color: black;
+            padding: 5px;
+            font-weight: bold;
+            font-size: 0.7rem;
+            border: 2px solid black;
+        }
+
+        /* CONTROLES */
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            right: 60px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px 30px;
+            background: var(--scout-black);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: var(--scout-yellow);
+            color: black;
+        }
+        
+        button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .highlight-yellow {
+            background: var(--scout-yellow);
+            padding: 0 5px;
+        }
+
+    </style>
+<style>
+
+/* === DS PATCH (no rompe tu layout; unifica marca) === */
+:root{
+  /* Alinea variables existentes a DS cuando aplique */
+  --scout-yellow: var(--scout-yellow);
+  --scout-black:  var(--scout-black);
+  --scout-white:  var(--scout-white);
+}
+
+/* Tipografía y ritmo */
+body{
+  font-family: var(--font-body) !important;
+  color: var(--scout-black);
+}
+h1{ font-family: var(--font-title) !important; font-size: var(--fs-5); letter-spacing: .6px; }
+h2{ font-family: var(--font-title) !important; font-size: var(--fs-4); }
+h3{ font-family: var(--font-subtitle) !important; font-size: var(--fs-3); }
+p, li{ font-size: var(--fs-1); line-height: 1.6; }
+
+/* Evita cortes en móvil */
+.stage, .main-container, .presentation-container, .journey-container, .scarf-container, .editor-console, .media-console{
+  min-height: 100dvh;
+  height: auto;
+}
+body{ overflow-x: hidden; }
+@media (max-width: 768px){
+  body{ overflow-y: auto; }
+}
+
+/* Botones consistentes (sin cambiar tu HTML) */
+button{
+  font-family: var(--font-subtitle) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 999px !important;
+  box-shadow: var(--shadow-1) !important;
+}
+button:hover{ filter: brightness(1.05); }
+
+/* Cards y cajas: sombra y radio premium */
+.slide, .canvas-box, .concept-card, .copy-box, .card, .application-mockup, .seal-mockup{
+  border-radius: var(--radius-2) !important;
+}
+
+/* Headers: contraste y marca */
+header, .header{
+  font-family: var(--font-title-alt);
+}
+
+/* Accesibilidad: foco */
+:focus-visible{
+  outline: 3px solid rgba(255, 215, 0, .55);
+  outline-offset: 3px;
+}
+
+</style>
+</head>
+<body>
+
+    <div class="media-console">
+        <div class="sidebar">
+            <div>
+                <div class="brand-logo">99<br>MEDIA</div>
+                <div class="role-title">WALESCA & CLAUDIA<br>STRATEGIC PR</div>
+                
+                <div class="nav-dots">
+                    <div class="dot active" onclick="goToSlide(0)"></div>
+                    <div class="dot" onclick="goToSlide(1)"></div>
+                    <div class="dot" onclick="goToSlide(2)"></div>
+                    <div class="dot" onclick="goToSlide(3)"></div>
+                    <div class="dot" onclick="goToSlide(4)"></div>
+                </div>
+            </div>
+            <div class="meta-info">
+                Plan Estratégico 2026<br>
+                Identidad & Alianzas
+            </div>
+        </div>
+
+        <div class="content-area">
+            
+            <div class="slide active">
+                <div style="color: #999; font-weight: bold; margin-bottom: 10px;">DEPARTAMENTO DE RR.CC.</div>
+                <h1>NO SOMOS FOTÓGRAFAS,<br>SOMOS <span class="highlight-yellow">NARRADORAS</span>.</h1>
+                <h2>El Nuevo Rol Estratégico.</h2>
+                <p>Hasta hoy, documentábamos eventos. Desde hoy, <b>construimos leyendas</b>.</p>
+                <p>Nuestra misión no es solo subir fotos a Instagram. Es gestionar la reputación del Grupo 99 para que <b>"La Empresa Pionera"</b> o <b>"Institución X"</b> quiera asociar su marca con la nuestra.</p>
+            </div>
+
+            <div class="slide">
+                <h1>EL "STORYTELLING" DEL<br>PROJECT ROVER.</h1>
+                <h2>Cómo vendemos los proyectos de los muchachos.</h2>
+                <div class="strategy-box">
+                    <div class="card">
+                        <h3>ANTES</h3>
+                        <p>Foto de un scout recogiendo basura.</p>
+                        <small>"Limpiando el parque."</small>
+                    </div>
+                    <div class="card">
+                        <h3>AHORA (ESTRATEGIA)</h3>
+                        <p>Video reel dinámico de Rovers liderando vecinos.</p>
+                        <small>Headline: <b>"Líderes que recuperan espacios públicos."</b></small>
+                    </div>
+                </div>
+                <p style="margin-top: 20px;"><b>Tu trabajo:</b> Convertir el sudor de los muchachos en contenido épico que atraiga patrocinio.</p>
+            </div>
+
+            <div class="slide">
+                <h1>LA JOYA DE LA CORONA:<br>EL SELLO #YoSoyScout.</h1>
+                <h2>Gestión de Marca y Alianzas.</h2>
+                <p>Walesca, tú eres la guardiana de este sello. Tú defines quién merece tenerlo y cómo debe lucir.</p>
+                
+                <div class="visual-identity">
+                    <div style="flex: 1;">
+                        <ul>
+                            <li><b>Diseño Visual:</b> Crear el arte final (Premium, Dorado/Negro).</li>
+                            <li><b>Kit de Prensa:</b> Una carta elegante para entregar el sello a las empresas.</li>
+                            <li><b>Control de Calidad:</b> Asegurar que donde se pegue el sello, se vea bien.</li>
+                        </ul>
+                    </div>
+                    <div class="mockup-post">
+                        (FOTO ENTRADA EMPRESA)
+                        <div class="badge-overlay">⚜️ #YoSoyScout<br>EMPRESA ALIADA</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <h1>SEGURIDAD DE IMAGEN</h1>
+                <h2>Cumplimiento "Safe From Harm".</h2>
+                <p>El profesionalismo también es ética. Como encargadas de imagen, ustedes garantizan:</p>
+                <div class="strategy-box">
+                    <div class="card" style="border-left-color: red;">
+                        <h3>FILTRO DE PROTECCIÓN</h3>
+                        <p>No publicar fotos comprometedoras, ángulos inadecuados o datos sensibles de menores.</p>
+                    </div>
+                    <div class="card" style="border-left-color: green;">
+                        <h3>CONSENTIMIENTO</h3>
+                        <p>Gestionar los permisos de imagen de los padres nuevos.</p>
+                    </div>
+                </div>
+                <p style="margin-top: 20px;">Esto le da confianza a las instituciones de que somos una entidad seria y segura.</p>
+            </div>
+
+            <div class="slide">
+                <h1>TU HOJA DE RUTA</h1>
+                <h2>Próximos Pasos Inmediatos.</h2>
+                <ol style="font-size: 1.2rem; line-height: 2;">
+                    <li><b>Diseñar el Sello Digital:</b> Crear el vector final (Illustrator/Canva).</li>
+                    <li><b>Reunión con los Aliados:</b> Presentar el prototipo impreso en papel de alta calidad a <b>los Gerentes de la Empresa X</b>.</li>
+                    <li><b>Campaña Interna:</b> Explicar a los Rovers que si no hay fotos de calidad, su proyecto "no existe".</li>
+                    <li><b>Lanzamiento:</b> Publicar el primer "Caso de Éxito" (La Empresa Pionera).</li>
+                </ol>
+            </div>
+
+            <div class="controls">
+                <button id="prevBtn" onclick="changeSlide(-1)">Anterior</button>
+                <button id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateUI() {
+            // Slides
+            slides.forEach(s => s.classList.remove('active'));
+            slides[currentSlide].classList.add('active');
+            
+            // Dots
+            dots.forEach(d => d.classList.remove('active'));
+            dots[currentSlide].classList.add('active');
+
+            // Buttons
+            prevBtn.disabled = (currentSlide === 0);
+            nextBtn.innerText = (currentSlide === slides.length - 1) ? "Finalizar" : "Siguiente";
+        }
+
+        function changeSlide(dir) {
+            currentSlide += dir;
+            if(currentSlide < 0) currentSlide = 0;
+            if(currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateUI();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateUI();
+        }
+
+        // Teclado
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight') changeSlide(1);
+            if(e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

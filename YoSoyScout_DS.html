@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="design-system.css">
+<title>Rover Canvas #YoSoyScout - Grupo 99 (DS)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto+Condensed:wght@300;400;700&display=swap');
+
+        :root {
+            --scout-yellow: #FFD700;
+            --scout-black: #1a1a1a;
+            --postit-yellow: #fff740;
+            --postit-pink: #ff7eb9;
+            --postit-blue: #7afcff;
+            --postit-green: #90ee90;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            font-family: 'Roboto Condensed', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* MARCO PRINCIPAL */
+        .stage {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* HEADER */
+        header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: var(--scout-black);
+            border-bottom: 5px solid var(--scout-yellow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .brand {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.5rem;
+            color: var(--scout-yellow);
+            margin-left: 20px;
+        }
+
+        .status {
+            margin-right: 40px;
+            font-size: 1.2rem;
+            color: #ddd;
+        }
+
+        /* SLIDES */
+        .slide {
+            display: none;
+            width: 90%;
+            height: 80%;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+            color: #333;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ESTRUCTURA DEL CANVAS (GRID) */
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto 1fr 1fr;
+            gap: 15px;
+            height: 100%;
+            margin-top: 10px;
+        }
+
+        .canvas-header {
+            grid-column: 1 / -1;
+            border-bottom: 2px dashed #ccc;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .canvas-title {
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--scout-black);
+        }
+
+        .canvas-box {
+            border: 2px solid #ddd;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .box-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #777;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* POST-ITS */
+        .postit {
+            padding: 15px;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.1rem;
+            color: #333;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            transform: rotate(-2deg);
+            margin-bottom: 10px;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .postit:nth-child(even) { transform: rotate(1deg); }
+
+        .p-yellow { background: var(--postit-yellow); }
+        .p-pink { background: var(--postit-pink); }
+        .p-blue { background: var(--postit-blue); }
+        .p-green { background: var(--postit-green); }
+
+        /* ZONA DE RETO (VACÍA) */
+        .empty-zone {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #eef;
+            border: 2px dashed #99f;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .empty-zone:hover {
+            background: #ddf;
+        }
+
+        .question-mark {
+            font-size: 3rem;
+            color: #99f;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* CAJAS ESPECÍFICAS GRID */
+        .box-justification { grid-column: 1 / 2; grid-row: 2 / 4; }
+        .box-purpose { grid-column: 2 / 3; grid-row: 2 / 4; }
+        .box-activities { grid-column: 3 / 4; grid-row: 2 / 4; }
+        .box-partners { grid-column: 4 / 5; grid-row: 2 / 3; }
+        .box-success { grid-column: 4 / 5; grid-row: 3 / 4; }
+
+        /* CONTROLES */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        button {
+            background: var(--scout-yellow);
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #b39700;
+            border-radius: 5px;
+            font-family: 'Roboto Condensed', sans-serif;
+            text-transform: uppercase;
+        }
+
+        button:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* ANIMACIONES */
+        @keyframes slideIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0) rotate(10deg); } to { opacity: 1; transform: scale(1) rotate(-2deg); } }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); opacity: 0.5; } }
+
+        /* Intro Slide Style */
+        .intro-slide {
+            background: var(--scout-yellow);
+            color: var(--scout-black);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+        .intro-title { font-size: 4rem; font-family: 'Permanent Marker'; text-transform: uppercase; margin: 0; }
+        .intro-sub { font-size: 2rem; margin-top: 10px; }
+
+    </style>
+<style>
+
+/* === DS PATCH (no rompe tu layout; unifica marca) === */
+:root{
+  /* Alinea variables existentes a DS cuando aplique */
+  --scout-yellow: var(--scout-yellow);
+  --scout-black:  var(--scout-black);
+  --scout-white:  var(--scout-white);
+}
+
+/* Tipografía y ritmo */
+body{
+  font-family: var(--font-body) !important;
+  color: var(--scout-black);
+}
+h1{ font-family: var(--font-title) !important; font-size: var(--fs-5); letter-spacing: .6px; }
+h2{ font-family: var(--font-title) !important; font-size: var(--fs-4); }
+h3{ font-family: var(--font-subtitle) !important; font-size: var(--fs-3); }
+p, li{ font-size: var(--fs-1); line-height: 1.6; }
+
+/* Evita cortes en móvil */
+.stage, .main-container, .presentation-container, .journey-container, .scarf-container, .editor-console, .media-console{
+  min-height: 100dvh;
+  height: auto;
+}
+body{ overflow-x: hidden; }
+@media (max-width: 768px){
+  body{ overflow-y: auto; }
+}
+
+/* Botones consistentes (sin cambiar tu HTML) */
+button{
+  font-family: var(--font-subtitle) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 999px !important;
+  box-shadow: var(--shadow-1) !important;
+}
+button:hover{ filter: brightness(1.05); }
+
+/* Cards y cajas: sombra y radio premium */
+.slide, .canvas-box, .concept-card, .copy-box, .card, .application-mockup, .seal-mockup{
+  border-radius: var(--radius-2) !important;
+}
+
+/* Headers: contraste y marca */
+header, .header{
+  font-family: var(--font-title-alt);
+}
+
+/* Accesibilidad: foco */
+:focus-visible{
+  outline: 3px solid rgba(255, 215, 0, .55);
+  outline-offset: 3px;
+}
+
+</style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">⚜️ GRUPO 99 | #YoSoyScout</div>
+        <div class="status" id="slideStatus">Metodología Canvas</div>
+    </header>
+
+    <div class="stage">
+        
+        <div class="slide intro-slide active">
+            <div class="intro-title">PROYECTO 2026</div>
+            <div class="intro-sub">Metodología Project Rover Canvas</div>
+            <p style="margin-top: 30px; font-size: 1.2rem;">Consejo Ampliado de Grupo</p>
+            <div style="margin-top: 20px; background: black; color: white; padding: 10px 20px; border-radius: 5px;">
+                Estrategia: Nosotros damos el "POR QUÉ", ellos crean el "CÓMO".
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="canvas-header">
+                <div class="canvas-title">1. FUERZA DE ÉLITE 🚑</div>
+                <div style="background:red; color:white; padding:5px 10px;">FOCO: EMERGENCIA</div>
+            </div>
+            <div class="canvas-grid">
+                <div class="canvas-box box-justification">
+                    <div class="box-title">JUSTIFICACIÓN (El Dolor)</div>
+                    <div class="postit p-pink">"En emergencias reales nos ven como niños estorbo."</div>
+                    <div class="postit p-pink">"Queremos ser operativos, no decorativos."</div>
+                </div>
+                <div class="canvas-box box-purpose">
+                    <div class="box-title">PROPÓSITO (El Sueño)</div>
+                    <div class="postit p-yellow">Ser certificados como UNIDAD DE APOYO OFICIAL.</div>
+                    <div class="postit p-yellow">Respeto técnico de Defensa Civil y Bomberos.</div>
+                </div>
+                <div class="canvas-box box-activities">
+                    <div class="box-title">ACTIVIDADES (¿Cómo lo logran?)</div>
+                    <div class="empty-zone">
+                        <div class="question-mark">?</div>
+                    </div>
+                    <div style="text-align:center; font-size:0.8rem; margin-top:5px; color:#666;">(Rellenar por Caminantes/Clan)</div>
+                </div>
+                <div class="canvas-box box-partners">
+                    <div class="box-title">SOCIOS CLAVE</div>
+                    <div class="postit p-blue">Defensa Civil</div>
+                    <div class="postit p-blue">Bomberos</div>
+                </div>
+                <div class="canvas-box box-success">
+                    <div class="box-title">CRITERIO ÉXITO</div>
+                    <div class="empty-zone"><div class="question-mark">?</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="canvas-header">
+                <div class="canvas-title">2. GUARDIANES DE LA BANDERA 🇩🇴</div>
+                <div style="background:darkblue; color:white; padding:5px 10px;">FOCO: PATRIA</div>
+            </div>
+            <div class="canvas-grid">
+                <div class="canvas-box box-justification">
+                    <div class="box-title">JUSTIFICACIÓN</div>
+                    <div class="postit p-pink">"Usan la bandera de trapo."</div>
+                    <div class="postit p-pink">"Se ha perdido el respeto y el protocolo."</div>
+                </div>
+                <div class="canvas-box box-purpose">
+                    <div class="box-title">PROPÓSITO</div>
+                    <div class="postit p-yellow">Expertos Nacionales en Protocolo.</div>
+                    <div class="postit p-yellow">Rescatar el orgullo por los símbolos.</div>
+                </div>
+                <div class="canvas-box box-activities">
+                    <div class="box-title">ACTIVIDADES</div>
+                    <div class="empty-zone"><div class="question-mark">?</div></div>
+                </div>
+                <div class="canvas-box box-partners">
+                    <div class="box-title">SOCIOS</div>
+                    <div class="postit p-blue">Efemérides Patrias</div>
+                    <div class="postit p-blue">Inst. Duartiano</div>
+                </div>
+                <div class="canvas-box box-success">
+                    <div class="box-title">CRITERIO ÉXITO</div>
+                    <div class="postit p-green">Dirigir acto del 27 de Febrero.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="canvas-header">
+                <div class="canvas-title">3. LÍDERES ANTIVIRUS 🏫</div>
+                <div style="background:orange; color:white; padding:5px 10px;">FOCO: ESCUELAS</div>
+            </div>
+            <div class="canvas-grid">
+                <div class="canvas-box box-justification">
+                    <div class="box-title">JUSTIFICACIÓN</div>
+                    <div class="postit p-pink">"Bullying, apatía y aburrimiento en aulas."</div>
+                    <div class="postit p-pink">"Faltan influenciadores positivos."</div>
+                </div>
+                <div class="canvas-box box-purpose">
+                    <div class="box-title">PROPÓSITO</div>
+                    <div class="postit p-yellow">Scouts como 'Influencers' de valores.</div>
+                    <div class="postit p-yellow">Aumentar matrícula (Atracción).</div>
+                </div>
+                <div class="canvas-box box-activities">
+                    <div class="box-title">ACTIVIDADES</div>
+                    <div class="empty-zone"><div class="question-mark">?</div></div>
+                </div>
+                <div class="canvas-box box-partners">
+                    <div class="box-title">SOCIOS</div>
+                    <div class="postit p-blue">Directores</div>
+                    <div class="postit p-blue">Asoc. Padres</div>
+                </div>
+                <div class="canvas-box box-success">
+                    <div class="box-title">CRITERIO ÉXITO</div>
+                    <div class="empty-zone"><div class="question-mark">?</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="canvas-header">
+                <div class="canvas-title">4. DUEÑOS DEL ENTORNO 🌳</div>
+                <div style="background:green; color:white; padding:5px 10px;">FOCO: BARRIO</div>
+            </div>
+            <div class="canvas-grid">
+                <div class="canvas-box box-justification">
+                    <div class="box-title">JUSTIFICACIÓN</div>
+                    <div class="postit p-pink">"Parques sucios y entorno descuidado."</div>
+                    <div class="postit p-pink">"Si no lo cuidamos nosotros, nadie lo hará."</div>
+                </div>
+                <div class="canvas-box box-purpose">
+                    <div class="box-title">PROPÓSITO</div>
+                    <div class="postit p-yellow">Referentes de solución para Juntas de Vecinos.</div>
+                </div>
+                <div class="canvas-box box-activities">
+                    <div class="box-title">ACTIVIDADES</div>
+                    <div class="empty-zone"><div class="question-mark">?</div></div>
+                </div>
+                <div class="canvas-box box-partners">
+                    <div class="box-title">SOCIOS</div>
+                    <div class="postit p-blue">Ayuntamiento</div>
+                    <div class="postit p-blue">Junta de Vecinos</div>
+                </div>
+                <div class="canvas-box box-success">
+                    <div class="box-title">RECURSOS</div>
+                    <div class="postit p-green">Patrocinio Sello #YoSoyScout</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="canvas-header">
+                <div class="canvas-title">5. UN PASO DE GIGANTE 👨‍👩‍👧‍👦</div>
+                <div style="background:purple; color:white; padding:5px 10px;">FOCO: FAMILIA</div>
+            </div>
+            <div class="canvas-grid">
+                <div class="canvas-box box-justification">
+                    <div class="box-title">JUSTIFICACIÓN</div>
+                    <div class="postit p-pink">"Familias desconectadas."</div>
+                    <div class="postit p-pink">"Padres que solo van de 'choferes'."</div>
+                </div>
+                <div class="canvas-box box-purpose">
+                    <div class="box-title">PROPÓSITO</div>
+                    <div class="postit p-yellow">Bloque más grande en #UnPasoPorMiFamilia.</div>
+                    <div class="postit p-yellow">Integración Real.</div>
+                </div>
+                <div class="canvas-box box-activities">
+                    <div class="box-title">ACTIVIDADES</div>
+                    <div class="empty-zone"><div class="question-mark">?</div></div>
+                </div>
+                <div class="canvas-box box-partners">
+                    <div class="box-title">SOCIOS</div>
+                    <div class="postit p-blue">Pastoral Familiar</div>
+                </div>
+                <div class="canvas-box box-success">
+                    <div class="box-title">CRITERIO ÉXITO</div>
+                    <div class="postit p-green">Duplicar asistencia 2025.</div>
+                </div>
+            </div>
+        </div>
+
+         <div class="slide intro-slide">
+            <div class="intro-title">EL RETO ESTÁ LANZADO</div>
+            <p style="margin-top:20px;">Llevaremos estos Canvas a las Asambleas de Unidad.</p>
+            <p>Manada y Tropa: Guiados.</p>
+            <p>Caminantes y Clan: <b>Ellos llenan los espacios en blanco.</b></p>
+            <h2 style="margin-top:40px; font-family:'Permanent Marker'">¿PREGUNTAS?</h2>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button onclick="prevSlide()">❮ Anterior</button>
+        <button onclick="nextSlide()">Siguiente ❯</button>
+    </div>
+
+    <script>
+        let current = 0;
+        const slides = document.querySelectorAll('.slide');
+        const status = document.getElementById('slideStatus');
+
+        function showSlide(index) {
+            slides.forEach(s => s.classList.remove('active'));
+            
+            if (index >= slides.length) index = 0;
+            if (index < 0) index = slides.length - 1;
+            
+            slides[index].classList.add('active');
+            current = index;
+            
+            // Actualizar status
+            if(index === 0) status.innerText = "Inicio";
+            else if(index === slides.length-1) status.innerText = "Conclusiones";
+            else status.innerText = `Canvas ${index} de ${slides.length - 2}`;
+        }
+
+        function nextSlide() { showSlide(current + 1); }
+        function prevSlide() { showSlide(current - 1); }
+
+        // Teclado
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+</html>
