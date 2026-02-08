@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo Scout 99 Baden Powell | #YoSoyScout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- ESTILOS GENERALES (CSS) --- */
+        :root {
+            --scout-yellow: #FFD700; /* Identidad Pañoleta */
+            --scout-black: #1a1a1a;  /* Borde Pañoleta */
+            --scout-white: #ffffff;
+            --scout-grey: #f4f4f4;
+            --text-dark: #333;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--scout-white);
+        }
+
+        h1, h2, h3, .nav-link, .btn {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            background-color: var(--scout-black);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 5px solid var(--scout-yellow);
+        }
+
+        .logo {
+            color: var(--scout-yellow);
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .nav-link:hover { color: var(--scout-yellow); }
+        .nav-cta {
+            background: var(--scout-yellow);
+            color: var(--scout-black);
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* --- HERO SECTION (LA PORTADA) --- */
+        .hero {
+            height: 85vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 700px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--scout-yellow);
+            color: var(--scout-black);
+            padding: 15px 40px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover { transform: scale(1.05); background-color: #e6c200; }
+
+        /* --- SECCIÓN ESCUELA DE PADRES (EL VALOR) --- */
+        .value-prop {
+            padding: 80px 10%;
+            background-color: var(--scout-white);
+            text-align: center;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            height: 300px;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+
+        .flip-front, .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .flip-front { background-color: var(--scout-grey); color: var(--scout-black); border: 2px solid var(--scout-yellow); }
+        .flip-back { background-color: var(--scout-black); color: var(--scout-yellow); transform: rotateY(180deg); }
+
+        /* --- SECCIÓN UNIDADES (PROGRESIÓN) --- */
+        .units-section {
+            padding: 80px 5%;
+            background-color: #f9f9f9;
+        }
+
+        .units-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .unit-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .unit-card:hover { transform: translateY(-10px); }
+
+        .unit-header {
+            height: 150px;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 3rem;
+            /* Placeholder Colors - Reemplazar con fotos reales */
+        }
+
+        .u-manada { background-color: #f1c40f; }
+        .u-tropa { background-color: #27ae60; }
+        .u-caminantes { background-color: #2980b9; }
+        .u-clan { background-color: #c0392b; }
+
+        .unit-body { padding: 20px; text-align: center; }
+        .unit-body h3 { margin-top: 0; color: var(--scout-black); }
+
+        /* --- SECCIÓN ALIANZAS (#YoSoyScout) --- */
+        .alliances {
+            background-color: var(--scout-black);
+            color: white;
+            padding: 80px 10%;
+            text-align: center;
+        }
+
+        .seal-container {
+            border: 3px dashed var(--scout-yellow);
+            padding: 40px;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .partner-logo-placeholder {
+            width: 150px;
+            height: 150px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            font-weight: bold;
+            margin: 20px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #111;
+            color: #888;
+            text-align: center;
+            padding: 40px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .units-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; } /* En prod se agregaría menú hamburguesa */
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo">⚜️ GRUPO 99 BP</a>
+        <ul class="nav-links">
+            <li><a href="#inicio" class="nav-link">Inicio</a></li>
+            <li><a href="#padres" class="nav-link">Padres</a></li>
+            <li><a href="#unidades" class="nav-link">Unidades</a></li>
+            <li><a href="#alianzas" class="nav-link">Alianzas</a></li>
+            <li><a href="#contacto" class="nav-link nav-cta">Únete Ahora</a></li>
+        </ul>
+    </nav>
+
+    <header id="inicio" class="hero">
+        <h1>MÁS QUE UN UNIFORME...<br><span style="color: var(--scout-yellow);">UNA ACTITUD.</span></h1>
+        <p>Formamos el carácter de los líderes que República Dominicana necesita mañana, a través de la aventura de hoy.</p>
+        <a href="#contacto" class="btn">Conoce el Grupo 99</a>
+    </header>
+
+    <section id="padres" class="value-prop">
+        <h2>Lo que tú ves vs. Lo que ellos aprenden</h2>
+        <p>No somos una guardería. Somos socios en la educación de tu hijo.</p>
+        
+        <div class="cards-grid">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-front">
+                        <div style="font-size: 3rem;">⛺</div>
+                        <h3>Tú ves:</h3>
+                        <p>"Niños durmiendo en el suelo"</p>
+                    </div>
+                    <div class="flip-back">
+                        <h3>Ellos aprenden:</h3>
+                        <p>Resiliencia, Adaptabilidad y valorar las comodidades de casa.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-front">
+                        <div style="font-size: 3rem;">🔥</div>
+                        <h3>Tú ves:</h3>
+                        <p>"Jugar con fuego"</p>
+                    </div>
+                    <div class="flip-back">
+                        <h3>Ellos aprenden:</h3>
+                        <p>Responsabilidad, gestión de riesgos y seguridad.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-front">
+                        <div style="font-size: 3rem;">🤝</div>
+                        <h3>Tú ves:</h3>
+                        <p>"Estar con amigos"</p>
+                    </div>
+                    <div class="flip-back">
+                        <h3>Ellos aprenden:</h3>
+                        <p>Liderazgo, Trabajo en Equipo y Democracia (Sistema de Patrullas).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="unidades" class="units-section">
+        <h2 style="text-align: center; margin-bottom: 40px;">UNA AVENTURA PARA CADA EDAD</h2>
+        
+        <div class="units-grid">
+            <div class="unit-card">
+                <div class="unit-header u-manada">🐺</div>
+                <div class="unit-body">
+                    <h3>MANADA (7-11)</h3>
+                    <p>Descubrir el mundo con alegría. "Siempre Mejor".</p>
+                </div>
+            </div>
+
+            <div class="unit-card">
+                <div class="unit-header u-tropa">⚜️</div>
+                <div class="unit-body">
+                    <h3>TROPA (11-15)</h3>
+                    <p>La aventura de la patrulla y la exploración. "Siempre Listos".</p>
+                </div>
+            </div>
+
+            <div class="unit-card">
+                <div class="unit-header u-caminantes">🚀</div>
+                <div class="unit-body">
+                    <h3>CAMINANTES (15-17)</h3>
+                    <p>El desafío de construir su propio camino. "Siempre Adelante".</p>
+                </div>
+            </div>
+
+            <div class="unit-card">
+                <div class="unit-header u-clan">🛶</div>
+                <div class="unit-body">
+                    <h3>CLAN (18-21)</h3>
+                    <p>El servicio como estilo de vida. Proyectos de impacto real. "Servir".</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="alianzas" class="alliances">
+        <h2>ALIANZA DE VALORES #YoSoyScout</h2>
+        <p>Las instituciones y empresas líderes de nuestra comunidad respaldan el liderazgo juvenil.</p>
+        
+        <div class="seal-container">
+            <h3>INSTITUCIONES ALIADAS (PILOTO)</h3>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                <div class="partner-logo-placeholder">EMPRESA<br>PIONERA</div>
+                <div class="partner-logo-placeholder">DEFENSA<br>CIVIL</div>
+                <div class="partner-logo-placeholder">IGLESIA</div>
+            </div>
+            <p style="margin-top: 20px; font-style: italic;">"Apoyamos al Grupo 99 porque construyen la ciudadanía que queremos ver."</p>
+        </div>
+    </section>
+
+    <footer id="contacto">
+        <h3>GRUPO SCOUT 99 BADEN POWELL</h3>
+        <p>📍 Santo Domingo, República Dominicana</p>
+        <p>📧 info@scoutgrupo99.org | 📞 (809) 555-0199</p>
+        <div style="margin-top: 20px;">
+            <a href="#" style="color: white; margin: 0 10px;">Instagram</a>
+            <a href="#" style="color: white; margin: 0 10px;">Facebook</a>
+        </div>
+        <p style="font-size: 0.8rem; margin-top: 30px;">© 2026 Grupo Scout 99. Siempre Listos.</p>
+    </footer>
+
+</body>
+</html>
